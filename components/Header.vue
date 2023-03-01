@@ -14,7 +14,7 @@
           </v-icon>
         </v-btn>
         <v-btn depressed min-width="40" height="40" width="40" class="ml-5">
-          <v-img :src="require('@/assets/images/discard/direction_icon.svg')" />
+          <v-img :src="require('@/assets/images/direction_icon.svg')" />
         </v-btn>
       </div>
       <v-btn

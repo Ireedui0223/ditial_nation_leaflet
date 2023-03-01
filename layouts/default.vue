@@ -21,9 +21,7 @@
           </template>
           <template v-slot:append>
             <v-btn icon width="32" height="32" class="pa-1 mt-n1">
-              <v-img
-                :src="require('@/assets/images/discard/direction_icon.svg')"
-              />
+              <v-img :src="require('@/assets/images/direction_icon.svg')" />
             </v-btn>
           </template>
         </v-text-field>
@@ -61,6 +59,7 @@
           <v-card
             class="overflow-y-auto px-lg-2 px-md-2 px-sm-2 py-2"
             color="surface_1"
+            elevation="0"
             v-show="drawer"
             :min-width="$vuetify.breakpoint.xs ? '100%' : '370'"
             :max-width="$vuetify.breakpoint.xs ? '100%' : '370'"
@@ -91,7 +90,7 @@
                       <v-btn icon width="32" height="32" class="pa-1 mt-n1">
                         <v-img
                           :src="
-                            require('@/assets/images/discard/direction_icon.svg')
+                            require('@/assets/images/direction_icon.svg')
                           "
                         />
                       </v-btn>

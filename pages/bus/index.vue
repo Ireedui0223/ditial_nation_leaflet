@@ -41,11 +41,14 @@
       </div>
     </div>
     <v-list v-show="!search_focused">
-      <v-list-item v-for="bus in buses" :key="bus.id" class="px-0">
+      <v-list-item
+        v-for="bus in buses"
+        :key="bus.id"
+        class="px-0"
+        :to="`/bus/${bus.id}`"
+      >
         <v-list-item-avatar size="32">
-          <v-img
-            :src="require('@/assets/images/controller-icons/child_bus.svg')"
-          ></v-img>
+          <v-img :src="require('@/assets/images/controller-icons/bus.svg')" />
         </v-list-item-avatar>
         <v-list-item-content>
           <v-list-item-title class="secondary--text button-large--text">
@@ -56,10 +59,16 @@
             class="disabled--text title1--text d-flex align-center"
           >
             <span>{{ bus.current_loc }}</span>
-            <v-icon color="disabled">mdi-menu-right</v-icon>
+            <v-icon>mdi-menu-right</v-icon>
             <span> {{ bus.current_dist }}</span>
           </v-list-item-subtitle>
         </v-list-item-content>
+        <v-list-item-action>
+          <p class="mb-0 primary--text caption--text">
+            <v-icon size="8" color="primary">mdi-circle</v-icon> 10 мин
+          </p>
+          <p class="mb-0 disabled--text caption--text">2 буудал</p>
+        </v-list-item-action>
       </v-list-item>
     </v-list>
     <v-list v-show="search_focused" class="py-0">
@@ -84,71 +93,79 @@ export default {
       buses: [
         {
           title: "ХО:10А",
+          id: 1,
           current_loc: "Шадивлан",
           current_dist: "Чингис СОССЭ дээд сургууль",
         },
         {
           title: "ХО:10А",
+          id: 2,
           current_loc: "Шадивлан",
           current_dist: "Чингис СОССЭ дээд сургууль",
         },
         {
           title: "ХО:10А",
+          id: 3,
           current_loc: "Шадивлан",
           current_dist: "Чингис СОССЭ дээд сургууль",
         },
         {
           title: "ХО:10А",
+          id: 4,
           current_loc: "Шадивлан",
           current_dist: "Чингис СОССЭ дээд сургууль",
         },
         {
           title: "ХО:10А",
+          id: 5,
           current_loc: "Шадивлан",
           current_dist: "Чингис СОССЭ дээд сургууль",
         },
         {
           title: "ХО:10А",
+          id: 6,
           current_loc: "Шадивлан",
           current_dist: "Чингис СОССЭ дээд сургууль",
         },
         {
           title: "ХО:10А",
+          id: 7,
           current_loc: "Шадивлан",
           current_dist: "Чингис СОССЭ дээд сургууль",
         },
         {
           title: "ХО:10А",
+          id: 8,
           current_loc: "Шадивлан",
           current_dist: "Чингис СОССЭ дээд сургууль",
         },
         {
           title: "ХО:10А",
+          id: 9,
           current_loc: "Шадивлан",
           current_dist: "Чингис СОССЭ дээд сургууль",
         },
         {
           title: "ХО:10А",
+          id: 10,
           current_loc: "Шадивлан",
           current_dist: "Чингис СОССЭ дээд сургууль",
         },
         {
           title: "ХО:10А",
+          id: 11,
           current_loc: "Шадивлан",
           current_dist: "Чингис СОССЭ дээд сургууль",
         },
         {
           title: "ХО:10А",
+          id: 12,
           current_loc: "Шадивлан",
           current_dist: "Чингис СОССЭ дээд сургууль",
         },
         {
           title: "ХО:10А",
-          current_loc: "Шадивлан",
-          current_dist: "Чингис СОССЭ дээд сургууль",
-        },
-        {
-          title: "ХО:10А",
+          id: 13,
           current_loc: "Шадивлан",
           current_dist: "Чингис СОССЭ дээд сургууль",
         },

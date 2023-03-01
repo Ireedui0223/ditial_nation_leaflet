@@ -1,6 +1,14 @@
 <template>
   <client-only>
-    <l-map class="remove-default" :zoom="13" :center="[47.41322, -1.219482]">
+    <l-map
+      class="remove-default"
+      :zoom="13"
+      :center="
+        currentLocation
+          ? currentLocation
+          : [47.762477291192255, 106.7507664505006]
+      "
+    >
       <l-control-scale
         position="bottomright"
         :imperial="true"
@@ -35,6 +43,7 @@
             @click="change_layer()"
             width="80"
             height="80"
+            class="cursor-pointer"
             :src="require('@/assets/images/leaflet_controller/space_image.png')"
           ></v-img>
         </v-menu>
@@ -42,9 +51,11 @@
       <!-- <l-control-layers position="bottomright" /> -->
 
       <l-tile-layer
+        v-if="focused"
         :name="focused.name"
-        :visible="focused.visible"
+        :visible="true"
         :url="focused.url"
+        :subdomains="focused.subdomains"
         layer-type="base"
       />
 
@@ -60,7 +71,15 @@
         :lat-lng="[47.7860593200069, 107.29505843972845, 1454.57857154907]"
       >
       </l-marker>
-      <l-marker :lat-lng="[57.41322, -2.219482]"></l-marker>
+
+      <l-circle
+        v-if="currentLocation"
+        :lat-lng="currentLocation"
+        radius:4500
+        color:primary
+      />
+
+      <l-marker v-if="currentLocation" :lat-lng="currentLocation"></l-marker>
     </l-map>
   </client-only>
 </template>
@@ -69,25 +88,12 @@
 export default {
   data() {
     return {
-      tileProviders: [
-        {
-          name: "space",
-          visible: true,
-          url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-        },
-        {
-          name: "default",
-          visible: true,
-          url: "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
-        },
-      ],
-      focused: {
-        name: "space",
-        visible: true,
-        url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-      },
+      currentLocation: null,
+      tileProviders: [],
+      focused: null,
       iconSize: 41,
     };
+
     //     sample:{
     //       _latlng: Object { lat: 47.7860593200069, lng: 107.29505843972845, alt: 1454.57857154907 }
     // _latlng: Object { lat: 47.762477291192255, lng: 106.7507664505006, alt: 1361.02319797767 }
@@ -96,6 +102,35 @@ export default {
     // _latlng: Object { lat: 47.9155971587141, lng: 107.09450698325746, alt: 1328.14898753705 }
     //     }
   },
+  mounted() {
+    const mskey = "359b6742e02ed9d34b34cf3ef597c37b";
+    const xhttp = new XMLHttpRequest();
+    xhttp.open(
+      "GET",
+      "https://cloudgis.mn/map/v1/init/pc?mskey=" + mskey,
+      false
+    );
+    xhttp.send();
+    const data = JSON.parse(xhttp.response);
+
+    const ssid = data.ssid;
+    const space_layer = {
+      name: "space",
+      url: "http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
+      subdomains: ["mt0", "mt1", "mt2", "mt3"],
+    };
+    const default_layer = {
+      name: "default",
+      url: "https://cloudgis.mn/map/v1/tilemap/mobile/{z}/{x}/{y}?ssid=" + ssid,
+    };
+
+    this.tileProviders.push(space_layer);
+    this.tileProviders.push(default_layer);
+    // this.focused = default_layer;
+    this.focused = space_layer;
+    console.log(this.focused);
+  },
+
   computed: {
     dynamicSize() {
       return [this.iconSize, this.iconSize * 1.15];
@@ -111,8 +146,27 @@ export default {
           ? this.tileProviders[1]
           : this.tileProviders[0];
     },
+
     get_my_location() {
-      alert("location avii");
+      if (navigator.geolocation) {
+        const successCallback = (position) => {
+          const { latitude, longitude } = position.coords;
+          let my_loc = [];
+          my_loc.push(latitude);
+          my_loc.push(longitude);
+          this.currentLocation = my_loc;
+        };
+
+        const errorCallback = (error) => {
+          console.log(error);
+        };
+        navigator.geolocation.getCurrentPosition(
+          successCallback,
+          errorCallback
+        );
+      } else {
+        alert("browser doesn't support geolocation");
+      }
     },
   },
 };

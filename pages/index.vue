@@ -46,7 +46,7 @@ export default {
         {
           icon: require("@/assets/images/controller-icons/parking.svg"),
           desc: "Зогсоол",
-          url: "/",
+          url: "/parking",
         },
         {
           icon: require("@/assets/images/controller-icons/camera.svg"),
