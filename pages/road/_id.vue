@@ -39,12 +39,7 @@
         </p>
       </div>
       <div class="d-flex w-100">
-        <v-img
-          width="24"
-          height="24"
-          max-width="24"
-          :src="require('@/assets/images/road/schedule.svg')"
-        />
+        <v-icon color="success">mdi-clock</v-icon>
         <div class="w-100 px-4 mr-4">
           <p class="mb-3 title1--text secondary--text">Хугацаа</p>
           <p class="d-flex justify-space-between mb-1">

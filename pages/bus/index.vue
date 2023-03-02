@@ -72,7 +72,7 @@
       </v-list-item>
     </v-list>
     <v-list v-show="search_focused" class="py-0">
-      <v-list-item class="px-0" to="/bus-stop">
+      <v-list-item class="px-0" to="/bus-stop/1">
         <v-list-item-avatar size="20" class="mr-2">
           <v-img :src="require('@/assets/images/bus.svg')"></v-img>
         </v-list-item-avatar>
