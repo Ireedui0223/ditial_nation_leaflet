@@ -3,7 +3,7 @@
     <!-- <v-select hide-details solo chips :items="chooses"></v-select> -->
     <v-chip outlined class="mb-1">
       Зочлох үйлчилгээ
-      <v-icon color="secondary" size="8" class="ml-2">ph-caret-down</v-icon>
+      <v-icon color="secondary" size="8" class="ml-2">mdi-menu-down</v-icon>
     </v-chip>
     <!-- <v-list density="compact">
       <v-list-item-group v-model="chosen_hotel">

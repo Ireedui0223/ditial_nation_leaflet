@@ -56,7 +56,7 @@ export default {
         {
           icon: require("@/assets/images/controller-icons/agency.svg"),
           desc: "Товчоод",
-          url: "/",
+          url: "/bureau",
         },
         {
           icon: require("@/assets/images/controller-icons/rfid.svg"),
@@ -66,7 +66,7 @@ export default {
         {
           icon: require("@/assets/images/controller-icons/medic.svg"),
           desc: "Өрхийн эмнэлэг",
-          url: "/",
+          url: "/hospital",
         },
         {
           icon: require("@/assets/images/controller-icons/well.svg"),

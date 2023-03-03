@@ -1,6 +1,6 @@
 <template>
   <header class="d-flex justify-space-between main-header pr-8 py-8">
-    <div >
+    <div>
       <div class="mt-n1 d-flex">
         <v-btn
           depressed
@@ -10,7 +10,7 @@
           @click="active_navbar = !active_navbar"
         >
           <v-icon size="24">
-            {{ active_navbar ? "ph-caret-left" : "ph-caret-right" }}
+            {{ active_navbar ? "mdi-menu-left" : "mdi-menu-right" }}
           </v-icon>
         </v-btn>
         <v-btn depressed min-width="40" height="40" width="40" class="ml-5">
@@ -26,7 +26,7 @@
         class="mt-3"
         to="/"
       >
-        <v-icon>ph-x</v-icon>
+        <v-icon>mdi-close</v-icon>
       </v-btn>
     </div>
     <div class="d-flex">

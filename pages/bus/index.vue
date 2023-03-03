@@ -7,7 +7,7 @@
       clearable
       color="secondary"
       v-model="search_value"
-      append-icon="ph-magnifying-glass"
+      append-icon="mdi-magnify"
       class="rounded-lg my-5 custom-search"
       @focus="search_focused = true"
     />

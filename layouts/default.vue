@@ -16,7 +16,7 @@
         >
           <template v-slot:prepend-inner>
             <v-btn @click="$router.back()" icon class="mt-n2">
-              <v-icon color="disabled">ph-arrow-left</v-icon>
+              <v-icon color="disabled">mdi-arrow-left</v-icon>
             </v-btn>
           </template>
           <template v-slot:append>
@@ -83,15 +83,13 @@
                   >
                     <template v-slot:prepend-inner>
                       <v-btn @click="$router.back()" icon class="mt-n2">
-                        <v-icon color="disabled">ph-arrow-left</v-icon>
+                        <v-icon color="disabled">mdi-arrow-left</v-icon>
                       </v-btn>
                     </template>
                     <template v-slot:append>
                       <v-btn icon width="32" height="32" class="pa-1 mt-n1">
                         <v-img
-                          :src="
-                            require('@/assets/images/direction_icon.svg')
-                          "
+                          :src="require('@/assets/images/direction_icon.svg')"
                         />
                       </v-btn>
                     </template>

@@ -22,7 +22,6 @@ export default {
     "./assets/styles/inter.css",
     "./assets/styles/main.css",
     "./assets/styles/typography.css",
-    "./assets/styles/icon.css",
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins

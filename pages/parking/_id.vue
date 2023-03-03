@@ -1,8 +1,8 @@
 <template>
   <div class="mx-n2">
-    <v-img :src="require('@/assets/images/parking-single.png')"></v-img>
+    <v-img v-if="!$vuetify.breakpoint.xs" :src="require('@/assets/images/parking-single.png')"></v-img>
     <div class="px-4">
-      <p class="secondary--text subtitle2--text my-5">Зогсоол</p>
+      <p v-if="!$vuetify.breakpoint.xs" class="secondary--text subtitle2--text my-5">Зогсоол</p>
       <div class="d-flex justify-space-between mb-4">
         <span>Паркийн зогсоол</span>
         <v-chip color="success" class="px-2 py-1">
@@ -41,8 +41,8 @@
     </div>
     <v-divider />
     <v-tabs v-model="tab" background-color="surface_1" class="px-4">
-      <v-tab class="text-capitalize"> Эхлэх цэг </v-tab>
-      <v-tab class="text-capitalize"> Эцсийн цэг </v-tab>
+      <v-tab class="text-capitalize"> Ерөнхий </v-tab>
+      <v-tab class="text-capitalize"> Үнэлгээ </v-tab>
     </v-tabs>
     <v-divider />
     <v-tabs-items v-model="tab" class="mt-5 px-4">
@@ -109,7 +109,9 @@
             <p class="mb-0 ml-3 secondary--text title1--text">99006655</p>
           </div>
           <div class="d-flex align-start">
-            <v-icon size="24" color="primary" class="mr-3">mdi-credit-card</v-icon>
+            <v-icon size="24" color="primary" class="mr-3"
+              >mdi-credit-card</v-icon
+            >
             <div class="w-100">
               <p class="mb-3 secondary--text title1--text">Үнэ</p>
               <v-row no-gutters class="mb-2">
