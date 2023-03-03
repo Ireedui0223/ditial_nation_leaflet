@@ -71,7 +71,7 @@ export default {
         {
           icon: require("@/assets/images/controller-icons/well.svg"),
           desc: "Худаг",
-          url: "/",
+          url: "/well",
         },
         {
           icon: require("@/assets/images/controller-icons/air_pollution.svg"),
