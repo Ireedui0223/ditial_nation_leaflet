@@ -12,14 +12,15 @@
           :src="require('@/assets/images/controller-icons/rfid.svg')"
         />
       </div>
-      <p class="secondary--text h6--text ml-4">RFID</p>
+      <p class="secondary--text h6--text ml-4 mb-0">RFID</p>
     </div>
-    <v-img
-      width="32"
-      height="32"
-      :src="require('@/assets/images/share.png')"
-      class="mb-5"
-    />
+    <v-btn icon depressed class="mb-5">
+      <v-img
+        width="36"
+        height="36"
+        :src="require('@/assets/images/share.png')"
+      />
+    </v-btn>
     <div class="mx-n2">
       <v-divider />
     </div>

@@ -76,7 +76,7 @@ export default {
         {
           icon: require("@/assets/images/controller-icons/air_pollution.svg"),
           desc: "Агаарын чанар",
-          url: "/",
+          url: "/air-quality",
         },
         {
           icon: require("@/assets/images/controller-icons/online_business.png"),

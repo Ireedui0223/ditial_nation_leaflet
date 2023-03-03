@@ -1,8 +1,16 @@
 <template>
   <div class="mx-n2">
-    <v-img :src="require('@/assets/images/road/road_fixing.png')" />
-    <div class="mx-3">
-      <p class="secondary--text subtitle2--text mb-5 px-1">Зам засвар</p>
+    <v-img
+      v-if="!$vuetify.breakpoint.xs"
+      :src="require('@/assets/images/road/road_fixing.png')"
+    ></v-img>
+    <div class="px-4">
+      <p
+        v-if="!$vuetify.breakpoint.xs"
+        class="secondary--text subtitle2--text my-5"
+      >
+        Зам засвар
+      </p>
       <div class="d-flex align-center mb-5">
         <v-img
           :src="require('@/assets/images/controller-icons/road_construct.svg')"
@@ -18,50 +26,63 @@
           </p>
         </div>
       </div>
-      <v-img
-        width="32"
-        height="32"
-        :src="require('@/assets/images/share.png')"
-        class="mb-5"
-      />
+      <div class="my-5">
+        <v-btn depressed color="#0085ff14" width="36" min-width="36">
+          <v-icon color="primary">mdi-share-variant</v-icon>
+        </v-btn>
+      </div>
     </div>
     <v-divider />
-    <div class="mt-5 mx-4 w-100">
+    <v-list class="pt-0 pb-3 mt-5 px-4">
       <div class="d-flex align-center mb-4">
         <v-img
           width="24"
           height="24"
           max-width="24"
           :src="require('@/assets/images/road/location.svg')"
+          class="mr-3"
         />
-        <p class="mb-0 ml-4 title1--text secondary--text">
-          Сүхбаатар дүүрэг 2-р хороо
-        </p>
+        <p class="secondary--text title1--text mb-0">Сүхбаатар дүүрэг 2-р хороо</p>
       </div>
-      <div class="d-flex w-100">
-        <v-icon color="success">mdi-clock</v-icon>
-        <div class="w-100 px-4 mr-4">
-          <p class="mb-3 title1--text secondary--text">Хугацаа</p>
-          <p class="d-flex justify-space-between mb-1">
-            <span class="disabled--text caption--text">Эхлэх</span>
-            <span class="secondary--text subtitle2--text">2022.10.02</span>
-          </p>
-          <p class="d-flex justify-space-between mb-0">
-            <span class="disabled--text caption--text">Дуусах</span>
-            <span class="secondary--text subtitle2--text">2022.10.02</span>
-          </p>
+      <div class="d-flex align-start">
+        <v-icon size="24" color="success" class="mr-3">mdi-clock</v-icon>
+        <div class="w-100">
+          <p class="mb-3 secondary--text title1--text">Хугацаа</p>
+          <v-row no-gutters class="mb-2">
+            <v-col cols="8">
+              <p class="mb-0 caption--text disabled--text">Эхлэх</p>
+            </v-col>
+            <v-col cols="4">
+              <p class="mb-0 secondary--text title1--text">2022.10.02</p>
+            </v-col>
+          </v-row>
+          <v-row no-gutters>
+            <v-col cols="8">
+              <p class="mb-0 caption--text disabled--text">Дуусах</p>
+            </v-col>
+            <v-col cols="4">
+              <p class="mb-0 secondary--text title1--text">2022.11.21</p>
+            </v-col>
+          </v-row>
         </div>
       </div>
-    </div>
+    </v-list>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {};
+  },
+};
 </script>
 
 <style lang="scss" scoped>
 .w-100 {
   width: 100%;
+}
+.no-text-transform {
+  text-transform: none;
 }
 </style>
