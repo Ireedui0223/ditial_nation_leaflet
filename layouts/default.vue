@@ -115,11 +115,25 @@
 <script>
 import Header from "@/components/Header.vue";
 import LeafletMap from "../components/LeafletMap.vue";
+import { REQUEST_ID } from "@/utils/constants";
 export default {
   name: "DefaultLayout",
   components: {
     Header,
     LeafletMap,
+  },
+  mounted() {
+    let xhttp = new XMLHttpRequest();
+    xhttp.open(
+      "GET",
+      "https://cloudgis.mn/map/v1/init/pc?mskey=" + REQUEST_ID.mskey,
+      false
+    );
+    xhttp.send();
+    let data = JSON.parse(xhttp.response);
+
+    let ssid = data.ssid;
+    this.$store.commit("setSSID", ssid);
   },
   data() {
     return {
@@ -127,6 +141,7 @@ export default {
       select_search: "",
       select_district: "",
       drawer: false,
+      REQUEST_ID,
     };
   },
 };
