@@ -2,14 +2,9 @@
   <client-only>
     <l-map
       ref="map"
-      @ready="test"
       class="remove-default"
-      :zoom="13"
-      :center="
-        currentLocation
-          ? currentLocation
-          : [47.762477291192255, 106.7507664505006]
-      "
+      :zoom="16"
+      :center="currentLocation ? currentLocation : [47.918528, 106.916752]"
     >
       <l-control-scale
         position="bottomright"
@@ -60,18 +55,21 @@
         :subdomains="focused.subdomains"
         layer-type="base"
       />
-      <!-- <div v-for="bus in (getBusses || []).slice(10)" :key="bus.id">
-        <l-marker
-          v-if="bus && bus.lat && bus.lon"
-          :lat-lng="[bus.lat, bus.lon]"
-        >
-          <l-icon
-            :icon-size="dynamicSize"
-            :icon-anchor="dynamicAnchor"
-            icon-url="/_nuxt/assets/images/controller-icons/child_bus.svg"
-          />
-        </l-marker>
-      </div> -->
+      <v-marker-cluster v-if="busses">
+        <div v-for="bus in busses" :key="bus.id">
+          <l-marker
+            @click="drawToolTip($event.target)"
+            v-if="bus && bus.lat && bus.lon"
+            :lat-lng="[bus.lat, bus.lon]"
+          >
+            <l-icon
+              :icon-size="dynamicSize"
+              :icon-anchor="dynamicAnchor"
+              icon-url="/_nuxt/assets/images/controller-icons/child_bus.svg"
+            />
+          </l-marker>
+        </div>
+      </v-marker-cluster>
       <l-marker
         :lat-lng="[47.7860593200069, 107.29505843972845, 1454.57857154907]"
       >
@@ -90,35 +88,26 @@
 </template>
 
 <script>
+import { REQUEST_ID } from "@/utils/constants";
 import { mskey } from "@/utils/constants";
 export default {
   data() {
     return {
+      REQUEST_ID,
       currentLocation: null,
       tileProviders: [],
       focused: null,
-      iconSize: 41,
-      bounds:null, 
+      iconSize: 20,
+      bounds: null,
       mskey,
+      ssid: null,
+      busses: null,
     };
   },
-  mounted() {
-    const ssid = this.$store.state.ssid;
-
-    console.log(ssid);
-    const space_layer = {
-      name: "space",
-      url: "http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
-      subdomains: ["mt0", "mt1", "mt2", "mt3"],
-    };
-    const default_layer = {
-      name: "default",
-      url: "https://cloudgis.mn/map/v1/tilemap/mobile/{z}/{x}/{y}?ssid=" + ssid,
-    };
-
-    this.tileProviders.push(space_layer);
-    this.tileProviders.push(default_layer);
-    this.focused = space_layer;
+  async mounted() {
+    await this.get_ssid();
+    await this.set_tile();
+    await this.get_busses();
   },
 
   computed: {
@@ -130,6 +119,19 @@ export default {
     },
   },
   methods: {
+    async get_ssid() {
+      let xhttp = new XMLHttpRequest();
+      xhttp.open(
+        "GET",
+        "https://cloudgis.mn/map/v1/init/pc?mskey=" + REQUEST_ID.mskey,
+        false
+      );
+      xhttp.send();
+      let data = JSON.parse(xhttp.response);
+
+      this.ssid = data.ssid;
+      this.$store.commit("setSSID", this.ssid);
+    },
     change_layer() {
       this.focused =
         this.focused.name === "space"
@@ -138,34 +140,79 @@ export default {
     },
 
     get_my_location() {
-      // if (navigator.geolocation) {
-      //   const successCallback = (position) => {
-      //     const { latitude, longitude } = position.coords;
-      //     let my_loc = [];
-      //     my_loc.push(latitude);
-      //     my_loc.push(longitude);
-      //     this.currentLocation = my_loc;
-      //   };
-
-      //   const errorCallback = (error) => {
-      //     console.log(error);
-      //   };
-      //   navigator.geolocation.getCurrentPosition(
-      //     successCallback,
-      //     errorCallback
-      //   );
-      // } else {
-      //   alert("browser doesn't support geolocation");
-      // }
-      
-    },
-    test() {
       const track = this.$refs.map;
       this.bounds = track.mapObject.getBounds();
-      console.log(this.bounds);
-      console.log({ 'LLX': this.bounds['_southWest']['lng'],})
+      console.log({ LLX: this.bounds["_southWest"]["lng"] });
+      console.log({
+        LLY: this.bounds["_southWest"]["lat"],
+      });
+      console.log({
+        URX: this.bounds["_northEast"]["lng"],
+      });
+      console.log({
+        URY: this.bounds["_northEast"]["lat"],
+      });
+
+      if (navigator.geolocation) {
+        const successCallback = (position) => {
+          const { latitude, longitude } = position.coords;
+          let my_loc = [];
+          my_loc.push(latitude);
+          my_loc.push(longitude);
+          this.currentLocation = my_loc;
+        };
+
+        const errorCallback = (error) => {
+          console.log(error);
+        };
+        navigator.geolocation.getCurrentPosition(
+          successCallback,
+          errorCallback
+        );
+      } else {
+        alert("browser doesn't support geolocation");
+      }
     },
-    
+
+    async set_tile() {
+      const space_layer = {
+        name: "space",
+        url: "http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
+        subdomains: ["mt0", "mt1", "mt2", "mt3"],
+      };
+      const default_layer = {
+        name: "default",
+        url:
+          "https://cloudgis.mn/map/v1/tilemap/mobile/{z}/{x}/{y}?ssid=" +
+          this.ssid,
+      };
+
+      this.tileProviders.push(space_layer);
+      this.tileProviders.push(default_layer);
+      this.focused = space_layer;
+    },
+
+    async get_busses() {
+      const ssid = this.$store.state.ssid;
+      console.log(this.$store.state.ssid);
+      const busses = await fetch(
+        `https://cloudgis.mn/map/v1/busstop/getDirectionByBusName?ssid=${ssid}`
+      )
+        .then((res) => res.json())
+        .then((data) => data.bus_stop_data.list);
+      const unique_array = busses.filter(
+        (value, index, self) =>
+          index ===
+          self.findIndex((t) => t.lat === value.lat && t.lon === value.lon)
+      );
+      this.busses = unique_array;
+    },
+    drawToolTip(bus) {
+      console.log(bus._icon._leaflet_pos);
+      let h = `<div>test</div>`
+      render(h);
+      
+    },
   },
 };
 </script>
