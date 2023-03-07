@@ -1,6 +1,8 @@
 <template>
   <client-only>
     <l-map
+      ref="map"
+      @ready="test"
       class="remove-default"
       :zoom="13"
       :center="
@@ -58,15 +60,18 @@
         :subdomains="focused.subdomains"
         layer-type="base"
       />
-
-      <l-marker :lat-lng="[47.41322, -1.219482]">
-        <l-icon
-          :icon-size="dynamicSize"
-          :icon-anchor="dynamicAnchor"
-          icon-url="/_nuxt/assets/images/controller-icons/child_bus.svg"
-        />
-      </l-marker>
-
+      <!-- <div v-for="bus in (getBusses || []).slice(10)" :key="bus.id">
+        <l-marker
+          v-if="bus && bus.lat && bus.lon"
+          :lat-lng="[bus.lat, bus.lon]"
+        >
+          <l-icon
+            :icon-size="dynamicSize"
+            :icon-anchor="dynamicAnchor"
+            icon-url="/_nuxt/assets/images/controller-icons/child_bus.svg"
+          />
+        </l-marker>
+      </div> -->
       <l-marker
         :lat-lng="[47.7860593200069, 107.29505843972845, 1454.57857154907]"
       >
@@ -85,6 +90,7 @@
 </template>
 
 <script>
+import { mskey } from "@/utils/constants";
 export default {
   data() {
     return {
@@ -92,28 +98,14 @@ export default {
       tileProviders: [],
       focused: null,
       iconSize: 41,
+      bounds:null, 
+      mskey,
     };
-
-    //     sample:{
-    //       _latlng: Object { lat: 47.7860593200069, lng: 107.29505843972845, alt: 1454.57857154907 }
-    // _latlng: Object { lat: 47.762477291192255, lng: 106.7507664505006, alt: 1361.02319797767 }
-    // _latlng: Object { lat: 47.70093646602314, lng: 107.22002032789129, alt: 1537.52758876397 }
-    // _latlng: Object { lat: 48.076845246297175, lng: 106.86208175622737, alt: 1518.74310789664 }
-    // _latlng: Object { lat: 47.9155971587141, lng: 107.09450698325746, alt: 1328.14898753705 }
-    //     }
   },
   mounted() {
-    const mskey = "359b6742e02ed9d34b34cf3ef597c37b";
-    const xhttp = new XMLHttpRequest();
-    xhttp.open(
-      "GET",
-      "https://cloudgis.mn/map/v1/init/pc?mskey=" + mskey,
-      false
-    );
-    xhttp.send();
-    const data = JSON.parse(xhttp.response);
+    const ssid = this.$store.state.ssid;
 
-    const ssid = data.ssid;
+    console.log(ssid);
     const space_layer = {
       name: "space",
       url: "http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
@@ -126,9 +118,7 @@ export default {
 
     this.tileProviders.push(space_layer);
     this.tileProviders.push(default_layer);
-    // this.focused = default_layer;
     this.focused = space_layer;
-    console.log(this.focused);
   },
 
   computed: {
@@ -148,26 +138,34 @@ export default {
     },
 
     get_my_location() {
-      if (navigator.geolocation) {
-        const successCallback = (position) => {
-          const { latitude, longitude } = position.coords;
-          let my_loc = [];
-          my_loc.push(latitude);
-          my_loc.push(longitude);
-          this.currentLocation = my_loc;
-        };
+      // if (navigator.geolocation) {
+      //   const successCallback = (position) => {
+      //     const { latitude, longitude } = position.coords;
+      //     let my_loc = [];
+      //     my_loc.push(latitude);
+      //     my_loc.push(longitude);
+      //     this.currentLocation = my_loc;
+      //   };
 
-        const errorCallback = (error) => {
-          console.log(error);
-        };
-        navigator.geolocation.getCurrentPosition(
-          successCallback,
-          errorCallback
-        );
-      } else {
-        alert("browser doesn't support geolocation");
-      }
+      //   const errorCallback = (error) => {
+      //     console.log(error);
+      //   };
+      //   navigator.geolocation.getCurrentPosition(
+      //     successCallback,
+      //     errorCallback
+      //   );
+      // } else {
+      //   alert("browser doesn't support geolocation");
+      // }
+      
     },
+    test() {
+      const track = this.$refs.map;
+      this.bounds = track.mapObject.getBounds();
+      console.log(this.bounds);
+      console.log({ 'LLX': this.bounds['_southWest']['lng'],})
+    },
+    
   },
 };
 </script>

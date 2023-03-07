@@ -116,7 +116,7 @@
         <v-col cols="2" class="d-flex align-center">
           <p class="mb-0">{{ element.name }}</p>
         </v-col>
-        <v-col cols="6">
+        <v-col cols="6" class="overflow-x-hidden">
           <div
             class="d-flex align-end justify-center mt-3"
             style="height: 40px"
@@ -136,10 +136,10 @@
             </div>
           </div>
         </v-col>
-        <v-col cols="2" class="d-flex align-center">
+        <v-col cols="2" class="d-flex align-center justify-center">
           <p class="mb-0">{{ element.min }}</p>
         </v-col>
-        <v-col cols="2" class="d-flex align-center">
+        <v-col cols="2" class="d-flex align-center justify-center">
           <p class="mb-0">{{ element.max }}</p>
         </v-col>
       </v-row>
@@ -151,11 +151,17 @@
 export default {
   data() {
     return {
-      quality_data: this.$store.state.pageData,
+      quality_data: null,
     };
   },
   mounted() {
-    console.log(this.quality_data);
+    const result = this.$store.state.air_quality_list.find(
+      ({ id }) => id == this.$route.params.id
+    );
+    if (!result) {
+      this.$router.push("/");
+    }
+    this.quality_data = result;
   },
 };
 </script>

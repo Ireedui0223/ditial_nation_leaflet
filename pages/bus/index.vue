@@ -42,7 +42,7 @@
     </div>
     <v-list v-show="!search_focused">
       <v-list-item
-        v-for="bus in buses"
+        v-for="bus in buses || []"
         :key="bus.id"
         class="px-0"
         :to="`/bus/${bus.id}`"
@@ -83,6 +83,7 @@
 </template>
 
 <script>
+import { REQUEST_ID } from "@/utils/constants";
 export default {
   data() {
     return {
@@ -90,91 +91,11 @@ export default {
       search_value: "",
       select_start: "",
       select_end: "",
-      buses: [
-        {
-          title: "ХО:10А",
-          id: 1,
-          current_loc: "Шадивлан",
-          current_dist: "Чингис СОССЭ дээд сургууль",
-        },
-        {
-          title: "ХО:10А",
-          id: 2,
-          current_loc: "Шадивлан",
-          current_dist: "Чингис СОССЭ дээд сургууль",
-        },
-        {
-          title: "ХО:10А",
-          id: 3,
-          current_loc: "Шадивлан",
-          current_dist: "Чингис СОССЭ дээд сургууль",
-        },
-        {
-          title: "ХО:10А",
-          id: 4,
-          current_loc: "Шадивлан",
-          current_dist: "Чингис СОССЭ дээд сургууль",
-        },
-        {
-          title: "ХО:10А",
-          id: 5,
-          current_loc: "Шадивлан",
-          current_dist: "Чингис СОССЭ дээд сургууль",
-        },
-        {
-          title: "ХО:10А",
-          id: 6,
-          current_loc: "Шадивлан",
-          current_dist: "Чингис СОССЭ дээд сургууль",
-        },
-        {
-          title: "ХО:10А",
-          id: 7,
-          current_loc: "Шадивлан",
-          current_dist: "Чингис СОССЭ дээд сургууль",
-        },
-        {
-          title: "ХО:10А",
-          id: 8,
-          current_loc: "Шадивлан",
-          current_dist: "Чингис СОССЭ дээд сургууль",
-        },
-        {
-          title: "ХО:10А",
-          id: 9,
-          current_loc: "Шадивлан",
-          current_dist: "Чингис СОССЭ дээд сургууль",
-        },
-        {
-          title: "ХО:10А",
-          id: 10,
-          current_loc: "Шадивлан",
-          current_dist: "Чингис СОССЭ дээд сургууль",
-        },
-        {
-          title: "ХО:10А",
-          id: 11,
-          current_loc: "Шадивлан",
-          current_dist: "Чингис СОССЭ дээд сургууль",
-        },
-        {
-          title: "ХО:10А",
-          id: 12,
-          current_loc: "Шадивлан",
-          current_dist: "Чингис СОССЭ дээд сургууль",
-        },
-        {
-          title: "ХО:10А",
-          id: 13,
-          current_loc: "Шадивлан",
-          current_dist: "Чингис СОССЭ дээд сургууль",
-        },
-      ],
     };
   },
 };
 </script>
-
+A
 <style lang="scss" scoped>
 .custom-search ::v-deep(.v-input__control) {
   .v-input__slot {

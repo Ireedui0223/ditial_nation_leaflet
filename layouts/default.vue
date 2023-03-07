@@ -122,19 +122,11 @@ export default {
     Header,
     LeafletMap,
   },
-  mounted() {
-    let xhttp = new XMLHttpRequest();
-    xhttp.open(
-      "GET",
-      "https://cloudgis.mn/map/v1/init/pc?mskey=" + REQUEST_ID.mskey,
-      false
-    );
-    xhttp.send();
-    let data = JSON.parse(xhttp.response);
-
-    let ssid = data.ssid;
-    this.$store.commit("setSSID", ssid);
+  async mounted() {
+    await this.get_ssid();
+    // await this.get_busses();
   },
+
   data() {
     return {
       search_value: "",
@@ -143,6 +135,30 @@ export default {
       drawer: false,
       REQUEST_ID,
     };
+  },
+  methods: {
+    get_ssid() {
+      let xhttp = new XMLHttpRequest();
+      xhttp.open(
+        "GET",
+        "https://cloudgis.mn/map/v1/init/pc?mskey=" + REQUEST_ID.mskey,
+        false
+      );
+      xhttp.send();
+      let data = JSON.parse(xhttp.response);
+
+      let ssid = data.ssid;
+      this.$store.commit("setSSID", ssid);
+    },
+    // async get_busses() {
+    //   const ssid = this.$store.state.ssid;
+    //   console.log(this.$store.state.ssid);
+    //   const busses = await fetch(
+    //     `https://cloudgis.mn/map/v1/busstop/getDirectionByBusName?ssid=${ssid}`
+    //   )
+    //     .then((res) => res.json())
+    //     .then((data) => data.bus_stop_data.list);
+    // },
   },
 };
 </script>
