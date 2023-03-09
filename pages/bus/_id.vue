@@ -1,100 +1,109 @@
 <template>
-  <div class="px-1">
-    <div class="d-flex mt-6">
-      <v-img
-        :src="require('@/assets/images/controller-icons/bus.svg')"
-        width="32"
-        height="32"
-        max-width="32"
-      />
-      <p class="secondary--text h6--text ml-3">Ч:72</p>
-    </div>
-    <p class="disabled--text title1--text d-flex align-center my-4">
-      <span>Хөгжим бүжиг</span>
-      <v-icon color="disabled">mdi-menu-right</v-icon>
-      <span> Богдхан амралт</span>
-    </p>
-    <v-img
-      width="36"
-      height="36"
-      :src="require('@/assets/images/share.png')"
-      class="mb-5"
-    />
-    <div class="mx-n3">
-      <v-divider />
-      <v-tabs v-model="tab" background-color="surface_1" class="px-4">
-        <v-tab class="text-capitalize"> Эхлэх цэг </v-tab>
-        <v-tab class="text-capitalize"> Эцсийн цэг </v-tab>
-      </v-tabs>
-      <v-divider />
-      <v-tabs-items v-model="tab" class="mt-5 px-4">
-        <v-tab-item>
-          <div v-for="stop in stops" :key="stop.id">
-            <nuxt-link
-              :to="`/bus-stop/${stop.id}`"
-              class="text-decoration-none"
-            >
-              <div class="d-flex align-center">
-                <div v-if="stop.isEnd">
-                  <img
-                    class="end-location"
-                    :src="require('@/assets/images/icons/end_location.png')"
-                  />
+  <div v-if="loading" class="d-flex align-center justify-center my-16">
+    <v-progress-circular indeterminate color="primary"></v-progress-circular>
+  </div>
+  <div class="px-1" v-else>
+    <div v-if="stops">
+      <div class="d-flex mt-6 align-center">
+        <v-img
+          :src="require('@/assets/images/controller-icons/bus.svg')"
+          width="32"
+          height="32"
+          max-width="32"
+        />
+        <p class="secondary--text h6--text ml-3 mb-0">
+          {{ stops[0].busroute_no }}
+        </p>
+      </div>
+      <p class="disabled--text title1--text d-flex align-center mt-4 mb-5">
+        <span>{{ stops[0].from_nmus }}</span>
+        <v-icon color="disabled">mdi-menu-right</v-icon>
+        <span> {{ stops[0].to_nmmn }}</span>
+      </p>
+      <v-btn icon depressed class="mb-5">
+        <v-img
+          width="36"
+          height="36"
+          :src="require('@/assets/images/share.png')"
+        />
+      </v-btn>
+      <div class="mx-n3">
+        <v-divider />
+        <v-tabs v-model="tab" background-color="surface_1" class="px-4">
+          <v-tab class="text-capitalize"> Эхлэх цэг </v-tab>
+          <v-tab class="text-capitalize"> Эцсийн цэг </v-tab>
+        </v-tabs>
+        <v-divider />
+
+        <v-tabs-items v-model="tab" class="mt-5 px-4">
+          <v-tab-item>
+            <div v-for="(stop, index) in stops" :key="index">
+              <nuxt-link
+                :to="`/bus-stop/${stop.startpoint_id}`"
+                class="text-decoration-none"
+              >
+                <div class="d-flex align-center">
+                  <div v-if="index === stops.length - 1">
+                    <img
+                      class="end-location"
+                      :src="require('@/assets/images/icons/end_location.png')"
+                    />
+                  </div>
+                  <div
+                    v-else-if="index === 0"
+                    class="primary rounded-circle start-circle"
+                  ></div>
+                  <div v-else class="primary rounded-circle circle"></div>
+                  <div
+                    class="d-flex align-center justify-center disabled rounded-sm bus-icon mr-2 ml-5"
+                  >
+                    <img
+                      :src="require('@/assets/images/icons/bus_white.svg')"
+                    />
+                  </div>
+                  <p class="mb-0 secondary--text title1--text">
+                    {{ stop.start_busstop_nm }}
+                  </p>
                 </div>
-                <div
-                  v-else-if="stop.isStart"
-                  class="primary rounded-circle start-circle"
-                ></div>
-                <div v-else class="primary rounded-circle circle"></div>
-                <div
-                  class="d-flex align-center justify-center disabled rounded-sm bus-icon mr-2 ml-5"
-                >
-                  <img :src="require('@/assets/images/icons/bus_white.svg')" />
+              </nuxt-link>
+              <div v-if="index !== stops.length - 1" class="line primary"></div>
+            </div>
+          </v-tab-item>
+          <v-tab-item>
+            <div v-for="(stop, index) in stops" :key="index">
+              <nuxt-link
+                :to="`/bus-stop/${stop.startpoint_id}`"
+                class="text-decoration-none"
+              >
+                <div class="d-flex align-center">
+                  <div v-if="index === stops.length - 1">
+                    <img
+                      class="end-location"
+                      :src="require('@/assets/images/icons/end_location.png')"
+                    />
+                  </div>
+                  <div
+                    v-else-if="index === 0"
+                    class="primary rounded-circle start-circle"
+                  ></div>
+                  <div v-else class="primary rounded-circle circle"></div>
+                  <div
+                    class="d-flex align-center justify-center disabled rounded-sm bus-icon mr-2 ml-5"
+                  >
+                    <img
+                      :src="require('@/assets/images/icons/bus_white.svg')"
+                    />
+                  </div>
+                  <p class="mb-0 secondary--text title1--text">
+                    {{ stop.start_busstop_nm }}
+                  </p>
                 </div>
-                <p class="mb-0 secondary--text title1--text">{{ stop.name }}</p>
-              </div>
-            </nuxt-link>
-            <div
-              v-if="!stop.isEnd"
-              class="line"
-              :class="stop.passed ? 'primary' : 'disabled'"
-            ></div>
-          </div>
-        </v-tab-item>
-        <v-tab-item>
-          <div v-for="stop in stops" :key="stop.id">
-            <nuxt-link
-              :to="`/bus-stop/${stop.id}`"
-              class="text-decoration-none"
-            >
-              <div class="d-flex align-center">
-                <div v-if="stop.isEnd">
-                  <img
-                    class="end-location"
-                    :src="require('@/assets/images/icons/end_location.png')"
-                  />
-                </div>
-                <div
-                  v-else-if="stop.isStart"
-                  class="primary rounded-circle start-circle"
-                ></div>
-                <div v-else class="primary rounded-circle circle"></div>
-                <div
-                  class="d-flex align-center justify-center disabled rounded-sm bus-icon mr-2 ml-5"
-                >
-                  <img :src="require('@/assets/images/icons/bus_white.svg')" />
-                </div>
-                <p class="mb-0 secondary--text title1--text">{{ stop.name }}</p>
-              </div>
-            </nuxt-link>
-            <div
-              v-if="!stop.isEnd"
-              class="line"
-              :class="stop.passed ? 'primary' : 'disabled'"
-            ></div>
-          </div>
-        </v-tab-item>
-      </v-tabs-items>
+              </nuxt-link>
+              <div v-if="index !== stops.length - 1" class="line primary"></div>
+            </div>
+          </v-tab-item>
+        </v-tabs-items>
+      </div>
     </div>
   </div>
 </template>
@@ -104,65 +113,39 @@ export default {
   data() {
     return {
       tab: 0,
-      stops: [
-        {
-          id: 1,
-          isStart: true,
-          isEnd: false,
-          name: "Чулуун овоо",
-          active: false,
-          passed: false,
-        },
-        {
-          id: 2,
-          isStart: false,
-          isEnd: false,
-          name: "Зурагт",
-          active: false,
-          passed: false,
-        },
-        {
-          id: 3,
-          isStart: false,
-          isEnd: false,
-          name: "Багшийн дээд",
-          active: false,
-          passed: false,
-        },
-        {
-          id: 4,
-          isStart: false,
-          isEnd: false,
-          name: "Кино үйлдвэр",
-          active: true,
-          passed: true,
-        },
-        {
-          id: 5,
-          isStart: false,
-          isEnd: false,
-          name: "Жуков",
-          active: true,
-          passed: true,
-        },
-        {
-          id: 6,
-          isStart: false,
-          isEnd: false,
-          name: "Чингис өргөө",
-          active: true,
-          passed: true,
-        },
-        {
-          id: 7,
-          isStart: false,
-          isEnd: true,
-          name: "Хонхор",
-          active: true,
-          passed: true,
-        },
-      ],
+      stops: null,
+      loading: false,
     };
+  },
+  async mounted() {
+    await this.get_bus_routes_stops();
+  },
+  methods: {
+    async get_bus_routes_stops() {
+      const date = new Date();
+      let month = date.getMonth().toString().padStart(2, "0");
+      let year = date.getFullYear();
+      const route_id = this.$route.params.id;
+      this.loading = true;
+      const bus_stops_list_time = await fetch(
+        `https://ubmap.ulaanbaatar.mn/uscc/busstop_predsvctime_list.php?busroute_id=${route_id}&busstop_seq=&yyyymm=${year}${month}`
+      )
+        .then((res) => res.json())
+        .then((data) => data.busstop_predsvctime_list)
+        .catch((err) => console.log(err));
+      this.loading = false;
+      const unique_bus_stops = bus_stops_list_time.filter(
+        (value, index, self) =>
+          index ===
+          self.findIndex((t) => t.start_busstop_nm == value.start_busstop_nm)
+      );
+      this.stops = bus_stops_list_time;
+    },
+  },
+  watch: {
+    tab(nv, ov) {
+      this.stops.reverse();
+    },
   },
 };
 </script>

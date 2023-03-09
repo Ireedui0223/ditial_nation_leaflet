@@ -3,47 +3,38 @@
     <v-progress-circular indeterminate color="primary"></v-progress-circular>
   </div>
   <div v-else class="px-2">
-    <v-text-field
-      placeholder="Автобусны буудал, дугаар хайх"
-      hide-details
+    <v-autocomplete
+      v-model="bus_value"
+      :items="buses"
       outlined
-      clearable
-      color="secondary"
-      v-model="search_value"
-      append-icon="mdi-magnify"
+      hide-details
+      color="blue-grey-lighten-2"
+      item-text="busroute_name"
+      item-value="busroute_id"
+      label="Эцсийн буудлаар хайх"
       class="rounded-lg my-5 custom-search"
-      @focus="search_focused = true"
-    />
-    <!-- @focusout="search_focused = false" -->
-    <div v-show="!search_focused">
-      <div class="d-flex justify-space-between mt-4">
-        <v-select
-          class="button-small--text mr-2 no-shadow select-border"
-          placeholder="Улаанбаатар"
-          solo
-          rounded
-          flat
-          hide-details
-          height="40"
-          color="secondary"
-          v-model="select_start"
-          :items="['ulaanbaatar', 'tuvaimag']"
-        ></v-select>
-        <v-select
-          class="button-small--text ml-2 no-shadow select-border"
-          placeholder="Дүүрэг"
-          solo
-          rounded
-          flat
-          hide-details
-          height="40"
-          color="secondary"
-          v-model="select_end"
-          :items="['ulaanbaatar', 'дүүрэг']"
-        ></v-select>
-      </div>
-    </div>
-    <v-list v-show="!search_focused">
+    >
+      <template v-slot:chip="{ props, item }">
+        <v-chip
+          v-bind="props"
+          :prepend-avatar="item.raw.avatar"
+          :text="item.raw.name"
+        ></v-chip>
+      </template>
+
+      <template v-slot:item="{ props, item }">
+        <v-list width="334" class="px-0 ml-n3 mr-n5">
+          <v-list-item
+            v-bind="props"
+            :to="`/bus/${item.busroute_id}`"
+          >
+            <p class="mb-0">{{ item.busroute_name }}</p>
+          </v-list-item>
+        </v-list>
+      </template>
+    </v-autocomplete>
+
+    <v-list>
       <v-list-item
         v-for="bus in buses || []"
         :key="bus.busroute_id"
@@ -96,6 +87,8 @@ export default {
       select_end: "",
       loading: false,
       buses: null,
+      route_value: "",
+      bus_value: null,
     };
   },
   async mounted() {
