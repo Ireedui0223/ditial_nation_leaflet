@@ -55,7 +55,10 @@
         :subdomains="focused.subdomains"
         layer-type="base"
       />
-      <v-marker-cluster v-if="busses">
+      <v-marker-cluster
+        :options="{ iconCreateFunction: createClusterIcon }"
+        v-if="busses"
+      >
         <div v-for="bus in busses" :key="bus.id">
           <l-marker
             @click="drawToolTip($event.target)"
@@ -102,9 +105,13 @@ export default {
       mskey,
       ssid: null,
       busses: null,
+      L: null,
     };
   },
+
   async mounted() {
+    const L = require("leaflet");
+    this.L = L;
     await this.get_ssid();
     await this.set_tile();
     await this.get_busses();
@@ -209,9 +216,28 @@ export default {
     },
     drawToolTip(bus) {
       console.log(bus._icon._leaflet_pos);
-      let h = `<div>test</div>`
+      let h = `<div>test</div>`;
       render(h);
-      
+    },
+    createClusterIcon(cluster) {
+      const childCount = cluster.getChildCount();
+      let iconSize = [40, 40];
+
+      if (childCount === 1) {
+        return this.L.marker(cluster.getAllChildMarkers()[0].getLatLng(), {
+          icon: this.originIcon,
+        });
+      }
+      return this.L.divIcon({
+        html: `<div 
+        style="background-image:url('/_nuxt/assets/images/controller-icons/child_bus.svg'); 
+              background-position: center;
+              background-size: contain;
+         ">
+        </div>`,
+        className: "marker-cluster",
+        iconSize,
+      });
     },
   },
 };
