@@ -57,18 +57,18 @@
       />
       <v-marker-cluster
         :options="{ iconCreateFunction: createClusterIcon }"
-        v-if="busses"
+        v-if="bus_stops"
       >
-        <div v-for="bus in busses" :key="bus.id">
+        <div v-for="bus in bus_stops" :key="bus.id">
           <l-marker
-            @click="drawToolTip($event.target)"
             v-if="bus && bus.lat && bus.lon"
             :lat-lng="[bus.lat, bus.lon]"
           >
+            <l-popup :content="bus.name"></l-popup>
             <l-icon
-              :icon-size="dynamicSize"
-              :icon-anchor="dynamicAnchor"
-              icon-url="/_nuxt/assets/images/controller-icons/child_bus.svg"
+              :icon-size="[iconSize, iconSize]"
+              :icon-anchor="[iconSize, iconSize]"
+              icon-url="/_nuxt/assets/images/icons/bus_stop.svg"
             />
           </l-marker>
         </div>
@@ -91,30 +91,21 @@
 </template>
 
 <script>
-import { REQUEST_ID } from "@/utils/constants";
 import { mskey } from "@/utils/constants";
 export default {
   data() {
     return {
-      REQUEST_ID,
+      mskey,
       currentLocation: null,
       tileProviders: [],
-      focused: null,
       iconSize: 20,
+      focused: null,
       bounds: null,
-      mskey,
-      ssid: null,
-      busses: null,
-      L: null,
     };
   },
 
   async mounted() {
-    const L = require("leaflet");
-    this.L = L;
-    await this.get_ssid();
     await this.set_tile();
-    await this.get_busses();
   },
 
   computed: {
@@ -126,19 +117,6 @@ export default {
     },
   },
   methods: {
-    async get_ssid() {
-      let xhttp = new XMLHttpRequest();
-      xhttp.open(
-        "GET",
-        "https://cloudgis.mn/map/v1/init/pc?mskey=" + REQUEST_ID.mskey,
-        false
-      );
-      xhttp.send();
-      let data = JSON.parse(xhttp.response);
-
-      this.ssid = data.ssid;
-      this.$store.commit("setSSID", this.ssid);
-    },
     change_layer() {
       this.focused =
         this.focused.name === "space"
@@ -191,7 +169,7 @@ export default {
         name: "default",
         url:
           "https://cloudgis.mn/map/v1/tilemap/mobile/{z}/{x}/{y}?ssid=" +
-          this.ssid,
+          this.$store.state.ssid,
       };
 
       this.tileProviders.push(space_layer);
@@ -199,45 +177,34 @@ export default {
       this.focused = space_layer;
     },
 
-    async get_busses() {
-      const ssid = this.$store.state.ssid;
-      console.log(this.$store.state.ssid);
-      const busses = await fetch(
-        `https://cloudgis.mn/map/v1/busstop/getDirectionByBusName?ssid=${ssid}`
-      )
-        .then((res) => res.json())
-        .then((data) => data.bus_stop_data.list);
-      const unique_array = busses.filter(
-        (value, index, self) =>
-          index ===
-          self.findIndex((t) => t.lat === value.lat && t.lon === value.lon)
-      );
-      this.busses = unique_array;
-    },
-    drawToolTip(bus) {
-      console.log(bus._icon._leaflet_pos);
-      let h = `<div>test</div>`;
-      render(h);
-    },
     createClusterIcon(cluster) {
       const childCount = cluster.getChildCount();
-      let iconSize = [40, 40];
+      let iconSize = [2 * this.icon, 2 * this.icon];
 
       if (childCount === 1) {
-        return this.L.marker(cluster.getAllChildMarkers()[0].getLatLng(), {
+        return this.$L.marker(cluster.getAllChildMarkers()[0].getLatLng(), {
           icon: this.originIcon,
         });
       }
-      return this.L.divIcon({
+      return this.$L.divIcon({
         html: `<div 
-        style="background-image:url('/_nuxt/assets/images/controller-icons/child_bus.svg'); 
+        style="background-image:url('/_nuxt/assets/images/icons/bus_stop.svg'); 
               background-position: center;
               background-size: contain;
+              border-radius:0px;
          ">
         </div>`,
         className: "marker-cluster",
         iconSize,
       });
+    },
+  },
+  computed: {
+    bus_stops: {
+      get() {
+        return this.$store.state.bus_stops;
+      },
+      set(e) {},
     },
   },
 };

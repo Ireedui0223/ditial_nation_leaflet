@@ -47,7 +47,7 @@
 
       <!-- navigation  -->
 
-      <v-slide-x-transition hide-on-leave>
+      <v-slide-x-transition hide-on-leave v-if="ssid">
         <div>
           <div
             v-show="$vuetify.breakpoint.xs"
@@ -106,13 +106,14 @@
 
       <div id="map-wrap">
         <Header v-if="!$vuetify.breakpoint.xs" :navbar.sync="drawer" />
-        <LeafletMap />
+        <LeafletMap v-if="ssid" />
       </div>
     </div>
   </v-app>
 </template>
 
 <script>
+import { REQUEST_ID } from "@/utils/constants";
 import Header from "@/components/Header.vue";
 import LeafletMap from "../components/LeafletMap.vue";
 export default {
@@ -123,22 +124,30 @@ export default {
   },
   data() {
     return {
+      REQUEST_ID,
       search_value: "",
       select_search: "",
       select_district: "",
       drawer: false,
+      ssid: false,
     };
   },
+  async mounted() {
+    await this.get_ssid();
+  },
   methods: {
-    // async get_busses() {
-    //   const ssid = this.$store.state.ssid;
-    //   console.log(this.$store.state.ssid);
-    //   const busses = await fetch(
-    //     `https://cloudgis.mn/map/v1/busstop/getDirectionByBusName?ssid=${ssid}`
-    //   )
-    //     .then((res) => res.json())
-    //     .then((data) => data.bus_stop_data.list);
-    // },
+    async get_ssid() {
+      let xhttp = new XMLHttpRequest();
+      xhttp.open(
+        "GET",
+        "https://cloudgis.mn/map/v1/init/pc?mskey=" + REQUEST_ID.mskey,
+        false
+      );
+      xhttp.send();
+      const data = JSON.parse(xhttp.response);
+      this.ssid = data.ssid;
+      this.$store.commit("setSSID", this.ssid);
+    },
   },
 };
 </script>

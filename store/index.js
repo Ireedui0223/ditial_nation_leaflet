@@ -2,6 +2,7 @@ export const state = () => ({
   navbar: false,
   ssid: null,
   air_quality_list: null,
+  bus_stops: null,
 });
 
 export const mutations = {
@@ -13,5 +14,8 @@ export const mutations = {
   },
   setSSID: (state, payload) => {
     state.ssid = payload;
+  },
+  setBus_stops: (state, payload) => {
+    state.bus_stops = payload;
   },
 };
