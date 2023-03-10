@@ -10,6 +10,11 @@
         <Controller :controller="controller" />
       </nuxt-link>
     </v-col>
+    <client-only>
+      <l-map ref="map" :zoom="16" :center="[47.918528, 106.916752]">
+        <l-marker ref="marker" :lat-lng="[47.918528, 106.916752]"> </l-marker>
+      </l-map>
+    </client-only>
   </v-row>
 </template>
 

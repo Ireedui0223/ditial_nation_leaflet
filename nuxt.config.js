@@ -1,5 +1,3 @@
-import colors from "vuetify/es5/util/colors";
-
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -25,7 +23,11 @@ export default {
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [{ src: "@/plugins/vue2-leaflet-markercluster.js", mode: "client" }],
+  plugins: [
+    // { src: "@/plugins/vue2-leaflet-markercluster.js", mode: "client" },
+    { src: "@/plugins/teleport.js", mode: "client" },
+    { src: "@/plugins/vue2-leaflet.js", mode: "client" },
+  ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -37,13 +39,7 @@ export default {
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: [
-    // Simple usage
-    "nuxt-leaflet",
-
-    // With options
-    ["nuxt-leaflet", {}],
-  ],
+  modules: [],
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {

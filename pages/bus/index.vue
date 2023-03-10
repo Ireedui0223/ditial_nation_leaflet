@@ -24,10 +24,7 @@
 
       <template v-slot:item="{ props, item }">
         <v-list width="334" class="px-0 ml-n3 mr-n5">
-          <v-list-item
-            v-bind="props"
-            :to="`/bus/${item.busroute_id}`"
-          >
+          <v-list-item v-bind="props" :to="`/bus/${item.busroute_id}`">
             <p class="mb-0">{{ item.busroute_name }}</p>
           </v-list-item>
         </v-list>
