@@ -190,9 +190,27 @@
               </l-marker>
             </div>
           </v-marker-cluster>
+
+          <v-marker-cluster
+            v-if="hospitals"
+          >
+            <div v-for="hospital in hospitals" :key="hospital.poi_seq">
+              <l-marker
+                v-if="hospitals && hospital.poi_lat && hospital.poi_lon"
+                :lat-lng="[hospital.poi_lat, hospital.poi_lon]"
+              >
+                <l-popup :content="hospital.poi_title"></l-popup>
+                <l-icon
+                  :icon-size="[1.5 * iconSize, 1.5 * iconSize]"
+                  :icon-anchor="[1.5 * iconSize, 1.5 * iconSize]"
+                  :icon-url="hospital.poi_code1_icon"
+                />
+              </l-marker>
+            </div>
+          </v-marker-cluster>
+
           <l-marker :lat-lng="[47.918519, 106.916752]"> </l-marker>
-          <!-- <teleport to="#markers">
-            </teleport> -->
+
           <div id="markers"></div>
           <l-circle
             v-if="currentLocation"
@@ -343,6 +361,12 @@ export default {
     bus_stops: {
       get() {
         return this.$store.state.bus_stops;
+      },
+      set(e) {},
+    },
+    hospitals: {
+      get() {
+        return this.$store.state.hospitals;
       },
       set(e) {},
     },

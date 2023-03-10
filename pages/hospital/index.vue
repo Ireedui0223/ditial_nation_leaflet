@@ -1,28 +1,31 @@
 <template>
-  <div class="px-2">
+  <div v-if="loading" class="d-flex align-center justify-center my-16">
+    <v-progress-circular indeterminate color="primary"></v-progress-circular>
+  </div>
+  <div v-else class="px-2">
     <p class="py-5 mb-0 secondary--text subtitle2--text">Зогсоол</p>
-    <v-list class="py-0">
+    <v-list v-if="hospitals" class="py-0">
       <v-list-item
         v-for="hospital in hospitals"
-        :key="hospital.id"
+        :key="hospital.poi_seq"
         class="px-0"
-        :to="`/hospital/${hospital.id}`"
+        :to="`/hospital/${hospital.poi_seq}`"
       >
         <v-list-item-avatar
           ><v-img
             width="32"
             height="32"
             max-width="32"
-            :src="require('@/assets/images/controller-icons/medic.svg')"
+            :src="hospital.poi_code1_icon"
           />
         </v-list-item-avatar>
         <v-list-item-content>
           <v-list-item-title class="on_surface--text button-medium--text mb-1">
-            {{ hospital.name }}
+            {{ hospital.poi_title }}
           </v-list-item-title>
           <v-list-item-subtitle class="caption--text disabled--text">
-            Одоогийн байршлаас
-            <span class="secondary--text">{{ hospital.distance }}</span> км
+            <!-- Одоогийн байршлаас -->
+            <span class="secondary--text">{{ hospital.poi_address2 }}</span>
           </v-list-item-subtitle>
         </v-list-item-content>
         <v-list-item-action>
@@ -41,29 +44,26 @@
 export default {
   data() {
     return {
-      hospitals: [
-        {
-          id: 1,
-          name: "Их амгалан ӨЭМТ",
-          distance: 4,
-        },
-        {
-          id: 2,
-          name: "Чингэлтэй ӨЭМТ",
-          distance: 4,
-        },
-        {
-          id: 3,
-          name: "Налайхын ӨЭМТ",
-          distance: 4,
-        },
-        {
-          id: 4,
-          name: "Баянзүрх ӨЭМТ",
-          distance: 4,
-        },
-      ],
+      hospitals: null,
+      loading: false,
     };
+  },
+  async mounted() {
+    await this.getHospital();
+  },
+  methods: {
+    async getHospital() {
+      const ssid = this.$store.state.ssid;
+      this.loading = true;
+      const hospitals = await fetch(
+        `https://cloudgis.mn/map/v1/poi/searchPoaName2Mobile?ssid=${ssid}`
+      )
+        .then((res) => res.json())
+        .then((data) => data.t_poi_data);
+      this.hospitals = hospitals;
+      this.loading = false;
+      this.$store.commit("setPoi_code1_icon", hospitals);
+    },
   },
 };
 </script>

@@ -3,6 +3,7 @@ export const state = () => ({
   ssid: null,
   air_quality_list: null,
   bus_stops: null,
+  hospitals: null,
 });
 
 export const mutations = {
@@ -17,5 +18,8 @@ export const mutations = {
   },
   setBus_stops: (state, payload) => {
     state.bus_stops = payload;
+  },
+  setPoi_code1_icon: (state, payload) => {
+    state.hospitals = payload;
   },
 };
