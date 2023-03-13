@@ -70,10 +70,12 @@
             <div>
               <!-- this logo won't display on mobile -->
               <div class="d-none d-sm-flex flex-column">
-                <v-img
-                  max-width="108"
-                  :src="require('@/assets/images/logo.svg')"
-                />
+                <nuxt-link to="/">
+                  <v-img
+                    max-width="108"
+                    :src="require('@/assets/images/logo.svg')"
+                  />
+                </nuxt-link>
                 <div class="py-4">
                   <v-text-field
                     hide-details
@@ -173,7 +175,9 @@
             layer-type="base"
           />
           <v-marker-cluster
-            :options="{ iconCreateFunction: createClusterIcon }"
+            :options="{
+              iconCreateFunction: createClusterIcon,
+            }"
             v-if="bus_stops"
           >
             <div v-for="bus in bus_stops" :key="bus.id">
@@ -193,6 +197,9 @@
 
           <v-marker-cluster
             v-if="hospitals"
+            :options="{
+              iconCreateFunction: createClusterIcon,
+            }"
           >
             <div v-for="hospital in hospitals" :key="hospital.poi_seq">
               <l-marker
@@ -203,7 +210,7 @@
                 <l-icon
                   :icon-size="[1.5 * iconSize, 1.5 * iconSize]"
                   :icon-anchor="[1.5 * iconSize, 1.5 * iconSize]"
-                  :icon-url="hospital.poi_code1_icon"
+                  icon-url="/_nuxt/assets/images/controller-icons/medic.svg"
                 />
               </l-marker>
             </div>
@@ -330,6 +337,9 @@ export default {
     },
 
     createClusterIcon(cluster) {
+      const childIcons = cluster
+        .getAllChildMarkers()
+        .map((marker) => marker.options.icon.options.iconUrl);
       const childCount = cluster.getChildCount();
       let iconSize = [2 * this.icon, 2 * this.icon];
 
@@ -339,8 +349,8 @@ export default {
         });
       }
       return this.$L.divIcon({
-        html: `<div 
-        style="background-image:url('/_nuxt/assets/images/icons/bus_stop.svg'); 
+        html: `<div
+        style="background-image:url('${childIcons[0]}');
               background-position: center;
               background-size: contain;
               border-radius:0px;

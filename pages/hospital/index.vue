@@ -16,8 +16,14 @@
             width="32"
             height="32"
             max-width="32"
-            :src="hospital.poi_code1_icon"
+            :src="require('@/assets/images/controller-icons/medic.svg')"
           />
+          <!-- <v-img
+            width="32"
+            height="32"
+            max-width="32"
+            :src="hospital.poi_code1_icon"
+          /> -->
         </v-list-item-avatar>
         <v-list-item-content>
           <v-list-item-title class="on_surface--text button-medium--text mb-1">
@@ -55,14 +61,25 @@ export default {
     async getHospital() {
       const ssid = this.$store.state.ssid;
       this.loading = true;
-      const hospitals = await fetch(
-        `https://cloudgis.mn/map/v1/poi/searchPoaName2Mobile?ssid=${ssid}&name=өрхийн эмнэлэг&limit=1000`
-      )
-        .then((res) => res.json())
-        .then((data) => console.log(data));
-      // this.hospitals = hospitals;
+      const limit = 1000;
+      const query_param = "өрхийн эмнэлэг";
+      const formData = new FormData();
+      formData.append("NAME", "өрхийн эмнэлэг");
+      formData.append("LIMIT", 1000);
+
+      const {
+        t_poi_data,
+        t_poi_nomark_data,
+        t_region_data,
+        t_streetname_data,
+      } = await fetch(
+        `https://cloudgis.mn/map/v1/poi/searchPoaName2Mobile?ssid=${ssid}&name=${query_param}&limit=${limit}`,
+        { method: "post", body: formData }
+      ).then((res) => res.json());
+      this.hospitals = t_poi_data;
+
       this.loading = false;
-      // this.$store.commit("setPoi_code1_icon", hospitals);
+      this.$store.commit("setPoi_code1_icon", t_poi_data);
     },
   },
 };
