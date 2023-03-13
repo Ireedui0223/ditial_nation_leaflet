@@ -56,13 +56,13 @@ export default {
       const ssid = this.$store.state.ssid;
       this.loading = true;
       const hospitals = await fetch(
-        `https://cloudgis.mn/map/v1/poi/searchPoaName2Mobile?ssid=${ssid}`
+        `https://cloudgis.mn/map/v1/poi/searchPoaName2Mobile?ssid=${ssid}&name=өрхийн эмнэлэг&limit=1000`
       )
         .then((res) => res.json())
-        .then((data) => data.t_poi_data);
-      this.hospitals = hospitals;
+        .then((data) => console.log(data));
+      // this.hospitals = hospitals;
       this.loading = false;
-      this.$store.commit("setPoi_code1_icon", hospitals);
+      // this.$store.commit("setPoi_code1_icon", hospitals);
     },
   },
 };
